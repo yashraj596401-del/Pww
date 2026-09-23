@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Student Dashboard</title>
+<title>Vidyapeeth Student Dashboard</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -12,7 +12,7 @@
     --card-bg: #ffffff;
     --text-primary: #1e1e1e;
     --text-secondary: #6b7280;
-    --primary-color: #4a34b8; /* Exact deep purple from charts */
+    --primary-color: #4a34b8;
     --primary-light: #f4f0ff;
     --success-text: #166534;
     --success-bg: #dcfce7;
@@ -29,6 +29,14 @@
   
   .app-container { max-width: 480px; margin: 0 auto; background: var(--bg-color); min-height: 100vh; padding-bottom: 90px; position: relative; }
 
+  /* Top Navigation / Header for Detail Page */
+  .top-nav-bar { background: white; padding: 14px 16px; display: flex; align-items: center; gap: 16px; font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; cursor: pointer; }
+  .back-arrow { font-size: 18px; font-weight: bold; }
+
+  /* Views Control */
+  .view-section { display: none; }
+  .view-section.active { display: block; }
+
   /* Top Alert Banner */
   .info-banner { background-color: #3f3f46; color: white; padding: 12px 16px; font-size: 13px; font-weight: 500; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   .info-content { display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
@@ -39,7 +47,7 @@
   .card { background: var(--card-bg); border-radius: 12px; padding: 24px; margin: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
   .section-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--text-primary); }
 
-  /* 1. Attendance Section */
+  /* Attendance Section */
   .donut-wrapper { display: flex; justify-content: center; margin-bottom: 24px; }
   .donut { width: 170px; height: 170px; border-radius: 50%; background: conic-gradient(var(--primary-color) 79%, #eaebf0 0); display: flex; align-items: center; justify-content: center; }
   .donut-inner { width: 138px; height: 138px; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -73,7 +81,7 @@
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-  /* 2. Inner Panels (DPP & Test Summary) */
+  /* Inner Panels & Charts */
   .inner-panel { background: #fbfbfe; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #f3f4f6; }
   .panel-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
   .panel-title { font-weight: 700; font-size: 14px; }
@@ -103,16 +111,13 @@
   .chart-legend-item { display: flex; align-items: center; gap: 8px; }
   .chart-legend-box { width: 10px; height: 10px; border-radius: 2px; }
 
-  /* Shared Buttons */
   .btn-details { width: 100%; padding: 14px; background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; font-weight: 700; font-size: 13px; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .arrow-right { font-size: 10px; opacity: 0.7; }
 
-  /* 3. Test Section Styles */
   .test-inner-panel { background: var(--primary-light); }
   .test-progress-bg { background: #e0d8f5; }
-  .test-stat-label { color: var(--text-primary); }
 
-  /* 4. Recent Tests Timeline */
+  /* Recent Tests Timeline */
   .recent-header { margin: 16px 16px 0; font-weight: 800; font-size: 18px; color: var(--text-primary); }
   .timeline { position: relative; padding-left: 20px; margin: 20px 16px 0; }
   .timeline::before { content: ''; position: absolute; left: 5px; top: 10px; bottom: 0; width: 2px; background: #e5e7eb; }
@@ -125,7 +130,6 @@
   .test-title { font-weight: 700; font-size: 15px; color: var(--text-primary); }
   
   .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.2px; }
-  .badge-awaiting { background: var(--warning-bg); color: var(--warning-text); }
   .badge-attempted { background: var(--success-bg); color: var(--success-text); }
   .badge-missed { background: var(--danger-bg); color: var(--danger-text); }
   
@@ -137,7 +141,29 @@
   .ts-val { font-size: 16px; font-weight: 800; color: var(--text-primary); }
   .ts-sub { font-size: 12px; color: var(--text-secondary); font-weight: 700; }
   
-  .test-view-link { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .test-view-link { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+
+  /* --- Test Details Inside Page Styles --- */
+  .details-summary-card { background: white; border-radius: 12px; padding: 16px; margin: 16px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .metric-box { background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .metric-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .metric-info .m-label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+  .metric-info .m-val { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+
+  .sub-performance-title { font-size: 16px; font-weight: 800; margin: 24px 16px 12px; }
+  
+  /* Accordion Subject List */
+  .subject-card { background: white; border-radius: 10px; margin: 0 16px 12px; border: 1.5px solid var(--border-color); overflow: hidden; }
+  .subject-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; background: #ffffff; cursor: pointer; }
+  .subject-header.active { background: #faf5ff; color: var(--primary-color); border-bottom: 1px solid var(--border-color); }
+  .sub-arrow { font-size: 10px; transition: transform 0.2s; }
+  .subject-header.active .sub-arrow { transform: rotate(180deg); }
+  
+  .topic-list { display: none; background: #fbfbfe; }
+  .subject-header.active + .topic-list { display: block; }
+  .topic-item { padding: 12px 20px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; border-bottom: 1px solid #f1f2f5; color: #374151; }
+  .topic-item:last-child { border-bottom: none; }
 
   /* Toast Notification */
   .toast-container { position: fixed; bottom: 74px; width: 100%; max-width: 480px; padding: 0 16px; z-index: 90; display: flex; justify-content: center; }
@@ -151,318 +177,325 @@
   .nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; position: relative; }
   .nav-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .nav-item.active .nav-icon svg { fill: currentColor; stroke: none; }
-  .notif-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; top: 0; right: 0; border: 2px solid white; }
-
 </style>
 </head>
 <body>
 
 <div class="app-container">
-  
-  <!-- Info Banner -->
-  <div class="info-banner">
-    <div class="info-content">
-      <div class="info-icon">i</div>
-      It may take up to 24 hours for your progress to get reflected on the dashboard
-    </div>
-    <div class="close-btn">✕</div>
-  </div>
 
-  <!-- Attendance Card -->
-  <div class="card">
-    <div class="section-title">
-      📅 Attendance
-    </div>
+  <!-- ================= VIEW 1: HOME DASHBOARD ================= -->
+  <div id="dashboardView" class="view-section active">
     
-    <div class="donut-wrapper">
-      <div class="donut">
-        <div class="donut-inner">
-          <div class="donut-val">79%</div>
-          <div class="donut-label">Average attendance</div>
-        </div>
+    <!-- Top Alert Banner -->
+    <div class="info-banner">
+      <div class="info-content">
+        <div class="info-icon">i</div>
+        It may take up to 24 hours for your progress to get reflected on the dashboard
       </div>
-    </div>
-    
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-val">129</div>
-        <div class="stat-label">Total Study Days</div>
-      </div>
-      <div class="divider-v"></div>
-      <div class="stat-item">
-        <div class="stat-val">102</div>
-        <div class="stat-label">Total Present Days</div>
-      </div>
-    </div>
-    
-    <div class="weekly-header">
-      <div class="weekly-title">Weekly Report</div>
-      <div class="date-range">
-        <span>←</span> 21 Sep - 27 Sep <span>→</span>
-      </div>
-    </div>
-    
-    <div class="calendar-row">
-      <div class="day-col">
-        <div class="day-name">M</div>
-        <div class="day-box present">21<div class="dot present"></div></div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">T</div>
-        <div class="day-box absent">22<div class="dot absent"></div></div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">W</div>
-        <div class="day-box today">23<div class="dot present"></div></div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">T</div>
-        <div class="day-box">24</div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">F</div>
-        <div class="day-box">25</div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">S</div>
-        <div class="day-box">26</div>
-      </div>
-      <div class="day-col">
-        <div class="day-name">S</div>
-        <div class="day-box">27</div>
-      </div>
-    </div>
-    
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--primary-color)"></div> Today</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div> No Class</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Present</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Absent</div>
-    </div>
-  </div>
-
-  <!-- Daily Practice Paper Card -->
-  <div class="card">
-    <div class="section-title">
-      📋 Daily Practice Paper
-    </div>
-    
-    <div class="inner-panel">
-      <div class="panel-header">
-        <div class="panel-title">Total DPP's Attempted</div>
-        <div><span class="panel-val">2</span><span class="panel-val-total">/171</span></div>
-      </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" style="width: 2%;"></div>
-      </div>
-      <div class="panel-subtitle">In Attempted DPP's</div>
-      <div class="panel-stats">
-        <div>
-          <div class="panel-stat-val">100.0%</div>
-          <div class="panel-stat-label">Questions Attempted</div>
-        </div>
-        <div class="divider-v" style="background: #e5e7eb;"></div>
-        <div>
-          <div class="panel-stat-val">71.43%</div>
-          <div class="panel-stat-label">Accuracy</div>
-        </div>
-      </div>
+      <div class="close-btn">✕</div>
     </div>
 
-    <!-- Monthly Chart -->
-    <div class="chart-container">
-      <div class="chart-title">Monthly DPP Performance</div>
-      <div class="bar-chart">
-        <div class="bar-group">
-          <div class="bar assigned" style="height: 51%;"><div class="bar-label">24</div></div>
-          <div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div>
-          <div class="x-label">Jun</div>
-        </div>
-        <div class="bar-group">
-          <div class="bar assigned" style="height: 65%;"><div class="bar-label">31</div></div>
-          <div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div>
-          <div class="x-label">Jul</div>
-        </div>
-        <div class="bar-group">
-          <div class="bar assigned" style="height: 100%;"><div class="bar-label">47</div></div>
-          <div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div>
-          <div class="x-label">Aug</div>
-        </div>
-        <div class="bar-group">
-          <div class="bar assigned" style="height: 23%;"><div class="bar-label">11</div></div>
-          <div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div>
-          <div class="x-label">Sep</div>
-        </div>
-      </div>
-      <div class="chart-legend">
-        <div class="chart-legend-item"><div class="chart-legend-box" style="background:#b4c6e7"></div> Total DPPs Assigned</div>
-        <div class="chart-legend-item"><div class="chart-legend-box" style="background:var(--primary-color)"></div> Attempted DPPs</div>
-      </div>
-    </div>
-
-    <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
-  </div>
-
-  <!-- Test Card -->
-  <div class="card">
-    <div class="section-title">
-      📊 Test
-    </div>
-    
-    <div class="inner-panel test-inner-panel">
-      <div class="panel-header">
-        <div class="panel-title">Total Tests Attempted</div>
-        <!-- Updated to 1 to account for AITS-2 -->
-        <div><span class="panel-val">1</span><span class="panel-val-total">/11</span></div>
-      </div>
-      <div class="progress-bar-bg test-progress-bg">
-        <!-- Updated width to show progress -->
-        <div class="progress-bar-fill" style="width: 9%;"></div>
-      </div>
-      <div class="panel-subtitle">In Attempted Tests</div>
-      <div class="panel-stats">
-        <div>
-          <!-- Simulated realistic stat -->
-          <div class="panel-stat-val">32%</div>
-          <div class="panel-stat-label">Avg. Score</div>
-        </div>
-        <div class="divider-v test-progress-bg"></div>
-        <div>
-          <!-- Simulated realistic stat -->
-          <div class="panel-stat-val">88%</div>
-          <div class="panel-stat-label">Accuracy</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
-  </div>
-
-  <div class="recent-header">Recent Tests</div>
-
-  <!-- Timeline List -->
-  <div class="timeline">
-    
-    <!-- Item 1 (AITS - 2 Modified to Realistic 'ATTEMPTED' State) -->
-    <div class="test-card-wrap">
-      <div class="timeline-dot"></div>
-      <div class="test-card">
-        <div class="test-header">
-          <div class="test-title">AITS - 2</div>
-          <div class="badge badge-attempted">ATTEMPTED</div>
-        </div>
-        <div class="test-meta">20-9-2026 &bull; Offline</div>
-        
-        <div class="test-stats-box">
-          <div class="ts-col">
-            <div class="ts-label">Score</div>
-            <div><span class="ts-val">234/720</span> <span class="ts-sub">32%</span></div>
-          </div>
-          <div class="ts-col">
-            <div class="ts-label">Rank</div>
-            <div class="ts-val">892</div>
+    <!-- Attendance Card -->
+    <div class="card">
+      <div class="section-title">📅 Attendance</div>
+      
+      <div class="donut-wrapper">
+        <div class="donut">
+          <div class="donut-inner">
+            <div class="donut-val">79%</div>
+            <div class="donut-label">Average attendance</div>
           </div>
         </div>
-        <div class="test-view-link">View Details <span class="arrow-right">▶</span></div>
+      </div>
+      
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-val">129</div>
+          <div class="stat-label">Total Study Days</div>
+        </div>
+        <div class="divider-v"></div>
+        <div class="stat-item">
+          <div class="stat-val">102</div>
+          <div class="stat-label">Total Present Days</div>
+        </div>
+      </div>
+      
+      <div class="weekly-header">
+        <div class="weekly-title">Weekly Report</div>
+        <div class="date-range"><span>←</span> 21 Sep - 27 Sep <span>→</span></div>
+      </div>
+      
+      <div class="calendar-row">
+        <div class="day-col"><div class="day-name">M</div><div class="day-box present">21<div class="dot present"></div></div></div>
+        <div class="day-col"><div class="day-name">T</div><div class="day-box absent">22<div class="dot absent"></div></div></div>
+        <div class="day-col"><div class="day-name">W</div><div class="day-box today">23<div class="dot present"></div></div></div>
+        <div class="day-col"><div class="day-name">T</div><div class="day-box">24</div></div>
+        <div class="day-col"><div class="day-name">F</div><div class="day-box">25</div></div>
+        <div class="day-col"><div class="day-name">S</div><div class="day-box">26</div></div>
+        <div class="day-col"><div class="day-name">S</div><div class="day-box">27</div></div>
+      </div>
+      
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--primary-color)"></div> Today</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div> No Class</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Present</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Absent</div>
       </div>
     </div>
 
-    <!-- Item 2 -->
-    <div class="test-card-wrap">
-      <div class="timeline-dot"></div>
-      <div class="test-card">
-        <div class="test-header">
-          <div class="test-title">Milestone:7</div>
-          <div class="badge badge-attempted">ATTEMPTED</div>
+    <!-- Daily Practice Paper Card -->
+    <div class="card">
+      <div class="section-title">📋 Daily Practice Paper</div>
+      
+      <div class="inner-panel">
+        <div class="panel-header">
+          <div class="panel-title">Total DPP's Attempted</div>
+          <div><span class="panel-val">2</span><span class="panel-val-total">/171</span></div>
         </div>
-        <div class="test-meta">13-9-2026 &bull; Offline</div>
-        
-        <div class="test-stats-box">
-          <div class="ts-col">
-            <div class="ts-label">Score</div>
-            <div><span class="ts-val">148/720</span> <span class="ts-sub">21%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 2%;"></div></div>
+        <div class="panel-subtitle">In Attempted DPP's</div>
+        <div class="panel-stats">
+          <div>
+            <div class="panel-stat-val">100.0%</div>
+            <div class="panel-stat-label">Questions Attempted</div>
           </div>
-          <div class="ts-col">
-            <div class="ts-label">Rank</div>
-            <div class="ts-val">1125</div>
+          <div class="divider-v" style="background: #e5e7eb;"></div>
+          <div>
+            <div class="panel-stat-val">71.43%</div>
+            <div class="panel-stat-label">Accuracy</div>
           </div>
         </div>
-        <div class="test-view-link">View Details <span class="arrow-right">▶</span></div>
       </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Monthly DPP Performance</div>
+        <div class="bar-chart">
+          <div class="bar-group"><div class="bar assigned" style="height: 51%;"><div class="bar-label">24</div></div><div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div><div class="x-label">Jun</div></div>
+          <div class="bar-group"><div class="bar assigned" style="height: 65%;"><div class="bar-label">31</div></div><div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div><div class="x-label">Jul</div></div>
+          <div class="bar-group"><div class="bar assigned" style="height: 100%;"><div class="bar-label">47</div></div><div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div><div class="x-label">Aug</div></div>
+          <div class="bar-group"><div class="bar assigned" style="height: 23%;"><div class="bar-label">11</div></div><div class="bar attempted" style="height: 1%;"><div class="bar-label" style="top:-18px">0</div></div><div class="x-label">Sep</div></div>
+        </div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><div class="chart-legend-box" style="background:#b4c6e7"></div> Total DPPs Assigned</div>
+          <div class="chart-legend-item"><div class="chart-legend-box" style="background:var(--primary-color)"></div> Attempted DPPs</div>
+        </div>
+      </div>
+
+      <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
     </div>
 
-    <!-- Item 3 -->
-    <div class="test-card-wrap">
-      <div class="timeline-dot"></div>
-      <div class="test-card">
-        <div class="test-header">
-          <div class="test-title">Common Assessment Test (CAT-1)</div>
-          <div class="badge badge-missed">MISSED</div>
+    <!-- Test Summary Card -->
+    <div class="card">
+      <div class="section-title">📊 Test</div>
+      <div class="inner-panel test-inner-panel">
+        <div class="panel-header">
+          <div class="panel-title">Total Tests Attempted</div>
+          <div><span class="panel-val">1</span><span class="panel-val-total">/11</span></div>
         </div>
-        <div class="test-meta">6-9-2026 &bull; Offline</div>
+        <div class="progress-bar-bg test-progress-bg"><div class="progress-bar-fill" style="width: 9%;"></div></div>
+        <div class="panel-subtitle">In Attempted Tests</div>
+        <div class="panel-stats">
+          <div><div class="panel-stat-val">32%</div><div class="panel-stat-label">Avg. Score</div></div>
+          <div class="divider-v test-progress-bg"></div>
+          <div><div class="panel-stat-val">88%</div><div class="panel-stat-label">Accuracy</div></div>
+        </div>
       </div>
+      <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
     </div>
 
-    <!-- Item 4 -->
-    <div class="test-card-wrap">
-      <div class="timeline-dot"></div>
-      <div class="test-card">
-        <div class="test-header">
-          <div class="test-title">Milestone:6</div>
-          <div class="badge badge-attempted">ATTEMPTED</div>
-        </div>
-        <div class="test-meta">23-8-2026 &bull; Offline</div>
-        
-        <div class="test-stats-box">
-          <div class="ts-col">
-            <div class="ts-label">Score</div>
-            <div><span class="ts-val">51/720</span> <span class="ts-sub">7%</span></div>
+    <div class="recent-header">Recent Tests</div>
+
+    <!-- Timeline Tests List -->
+    <div class="timeline">
+      <!-- AITS - 2 (Clickable to open inner details page) -->
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header">
+            <div class="test-title">AITS - 2</div>
+            <div class="badge badge-attempted">ATTEMPTED</div>
           </div>
-          <div class="ts-col">
-            <div class="ts-label">Rank</div>
-            <div class="ts-val">1537</div>
+          <div class="test-meta">20-9-2026 &bull; Offline</div>
+          
+          <div class="test-stats-box">
+            <div class="ts-col">
+              <div class="ts-label">Score</div>
+              <div><span class="ts-val">234/720</span> <span class="ts-sub">32%</span></div>
+            </div>
+            <div class="ts-col">
+              <div class="ts-label">Rank</div>
+              <div class="ts-val">892</div>
+            </div>
           </div>
+          <div class="test-view-link" onclick="openTestDetails()">View Details <span class="arrow-right">▶</span></div>
         </div>
-        <div class="test-view-link">View Details <span class="arrow-right">▶</span></div>
+      </div>
+
+      <!-- Milestone:7 -->
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header">
+            <div class="test-title">Milestone:7</div>
+            <div class="badge badge-attempted">ATTEMPTED</div>
+          </div>
+          <div class="test-meta">13-9-2026 &bull; Offline</div>
+          <div class="test-stats-box">
+            <div class="ts-col"><div class="ts-label">Score</div><div><span class="ts-val">148/720</span> <span class="ts-sub">21%</span></div></div>
+            <div class="ts-col"><div class="ts-label">Rank</div><div class="ts-val">1125</div></div>
+          </div>
+          <div class="test-view-link" onclick="openTestDetails()">View Details <span class="arrow-right">▶</span></div>
+        </div>
+      </div>
+
+      <!-- Common Assessment Test -->
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header">
+            <div class="test-title">Common Assessment Test (CAT-1)</div>
+            <div class="badge badge-missed">MISSED</div>
+          </div>
+          <div class="test-meta">6-9-2026 &bull; Offline</div>
+        </div>
       </div>
     </div>
 
-  </div>
-
-  <!-- Toast Notification -->
-  <div class="toast-container">
-    <div class="toast">
-      <div style="display:flex; align-items:center; gap:8px;">
-        📄 <span>Class Status will get updated by tomorrow!</span>
+    <!-- Toast Notice -->
+    <div class="toast-container">
+      <div class="toast">
+        <div style="display:flex; align-items:center; gap:8px;">📄 <span>Class Status will get updated by tomorrow!</span></div>
+        <div class="toast-close">✕</div>
       </div>
-      <div class="toast-close">✕</div>
     </div>
-  </div>
 
-  <!-- Bottom Navigation -->
+  </div> <!-- End Dashboard View -->
+
+
+  <!-- ================= VIEW 2: TEST DETAILS (INNER PAGE) ================= -->
+  <div id="testDetailsView" class="view-section">
+    
+    <div class="top-nav-bar" onclick="closeTestDetails()">
+      <span class="back-arrow">‹</span> AITS - 2
+    </div>
+
+    <div class="details-summary-card">
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#e0f2fe; color:#0284c7;">📈</div>
+          <div class="metric-info"><div class="m-label">Score</div><div class="m-val">234 / 720</div></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#dcfce7; color:#16a34a;">🎯</div>
+          <div class="metric-info"><div class="m-label">Accuracy</div><div class="m-val">88.5%</div></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#fef3c7; color:#d97706;">✅</div>
+          <div class="metric-info"><div class="m-label">Correct</div><div class="m-val">62</div></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#f3e8ff; color:#7e22ce;">🏆</div>
+          <div class="metric-info"><div class="m-label">Rank</div><div class="m-val">892</div></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#ffedd5; color:#c2410c;">⭐</div>
+          <div class="metric-info"><div class="m-label">Top Score</div><div class="m-val">685/720</div></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon" style="background:#f1f5f9; color:#475569;">📊</div>
+          <div class="metric-info"><div class="m-label">Avg Score</div><div class="m-val">317.24</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-performance-title">Subject wise Performance</div>
+
+    <!-- Accordion Subject: Physics -->
+    <div class="subject-card">
+      <div class="subject-header" onclick="toggleAccordion(this)">
+        <span>Physics</span> <span>7 <span class="sub-arrow">▼</span></span>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item"><span>Electric Charges and Fields</span> <span>2</span></div>
+        <div class="topic-item"><span>Electrostatic Potential and Capacitance</span> <span>3</span></div>
+        <div class="topic-item"><span>Current Electricity</span> <span>2</span></div>
+      </div>
+    </div>
+
+    <!-- Accordion Subject: Chemistry -->
+    <div class="subject-card">
+      <div class="subject-header" onclick="toggleAccordion(this)">
+        <span>Chemistry</span> <span>8 <span class="sub-arrow">▼</span></span>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item"><span>Organic Chemistry: Some Basic Principles...</span> <span>4</span></div>
+        <div class="topic-item"><span>Haloalkanes and Haloarenes</span> <span>3</span></div>
+        <div class="topic-item"><span>Solutions</span> <span>1</span></div>
+      </div>
+    </div>
+
+    <!-- Accordion Subject: Botany -->
+    <div class="subject-card">
+      <div class="subject-header" onclick="toggleAccordion(this)">
+        <span>Botany</span> <span>35 <span class="sub-arrow">▼</span></span>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item"><span>Sexual Reproduction in Flowering Plants</span> <span>27</span></div>
+        <div class="topic-item"><span>Molecular Basis of Inheritance</span> <span>8</span></div>
+      </div>
+    </div>
+
+    <!-- Accordion Subject: Zoology -->
+    <div class="subject-card">
+      <div class="subject-header" onclick="toggleAccordion(this)">
+        <span>Zoology</span> <span>60 <span class="sub-arrow">▼</span></span>
+      </div>
+      <div class="topic-list">
+        <div class="topic-item"><span>Human Reproduction</span> <span>30</span></div>
+        <div class="topic-item"><span>Reproductive Health</span> <span>30</span></div>
+      </div>
+    </div>
+
+  </div> <!-- End Test Details View -->
+
+
+  <!-- Bottom Navigation Bar -->
   <div class="bottom-nav">
-    <div class="nav-item active">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-4h2v4z"/></svg>
-      </div>
+    <div class="nav-item active" onclick="closeTestDetails()">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-4h2v4z"/></svg></div>
       Dashboard
     </div>
     <div class="nav-item">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-        <div class="notif-dot"></div>
-      </div>
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
       Announcements
     </div>
     <div class="nav-item">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
-      </div>
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg></div>
       Support
     </div>
   </div>
 
 </div>
+
+<script>
+  // Navigation Toggles
+  function openTestDetails() {
+    document.getElementById('dashboardView').classList.remove('active');
+    document.getElementById('testDetailsView').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function closeTestDetails() {
+    document.getElementById('testDetailsView').classList.remove('active');
+    document.getElementById('dashboardView').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Accordion Functionality for Subjects List
+  function toggleAccordion(header) {
+    header.classList.toggle('active');
+  }
+</script>
 
 </body>
 </html>
