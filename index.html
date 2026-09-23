@@ -16,8 +16,8 @@
     --primary-light: #f4f0ff;
     --success-text: #166534;
     --success-bg: #dcfce7;
-    --warning-text: #b45309;
-    --warning-bg: #fef3c7;
+    --warning-text: #854d0e;
+    --warning-bg: #fef9c3;
     --danger-text: #b91c1c;
     --danger-bg: #fee2e2;
     --border-color: #e5e7eb;
@@ -29,9 +29,15 @@
   
   .app-container { max-width: 480px; margin: 0 auto; background: var(--bg-color); min-height: 100vh; padding-bottom: 90px; position: relative; }
 
-  /* Top Navigation / Header for Detail Page */
+  /* Top Navigation Headers */
   .top-nav-bar { background: white; padding: 14px 16px; display: flex; align-items: center; gap: 16px; font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; cursor: pointer; }
-  .back-arrow { font-size: 18px; font-weight: bold; }
+  .back-arrow { font-size: 20px; font-weight: bold; }
+
+  /* App Header Profile Bar */
+  .app-header { background: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 99; }
+  .batch-dropdown { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .user-profile { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+  .user-avatar { width: 28px; height: 28px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--primary-color); }
 
   /* Views Control */
   .view-section { display: none; }
@@ -75,7 +81,6 @@
   .dot { width: 5px; height: 5px; border-radius: 50%; position: absolute; bottom: -10px; }
   .dot.present { background: #22c55e; }
   .dot.absent { background: #ef4444; }
-  .dot.noclass { background: #9ca3af; }
   
   .legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); font-weight: 600; padding: 0 8px; }
   .legend-item { display: flex; align-items: center; gap: 6px; }
@@ -132,6 +137,7 @@
   .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.2px; }
   .badge-attempted { background: var(--success-bg); color: var(--success-text); }
   .badge-missed { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-awaiting { background: var(--warning-bg); color: var(--warning-text); }
   
   .test-meta { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-bottom: 12px; }
   
@@ -142,10 +148,19 @@
   .ts-sub { font-size: 12px; color: var(--text-secondary); font-weight: 700; }
   
   .test-view-link { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+  
+  .view-all-btn { display: block; text-align: center; margin: 20px 16px; padding: 14px; background: white; border: 1px solid var(--border-color); border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--text-primary); }
+
+  /* --- View All Tests Page --- */
+  .tabs-row { display: flex; background: white; padding: 0 16px; border-bottom: 1px solid var(--border-color); gap: 24px; position: sticky; top: 53px; z-index: 99; }
+  .tab-item { padding: 12px 4px; font-size: 14px; font-weight: 700; color: var(--text-secondary); cursor: pointer; position: relative; }
+  .tab-item.active { color: var(--text-primary); }
+  .tab-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--text-primary); border-radius: 3px 3px 0 0; }
+  .results-info-text { font-size: 12px; color: var(--text-secondary); font-weight: 600; padding: 12px 16px 4px; }
 
   /* --- Test Details Inside Page Styles --- */
   .details-summary-card { background: white; border-radius: 12px; padding: 16px; margin: 16px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
   .metric-box { background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
   .metric-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
   .metric-info .m-label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
@@ -164,6 +179,11 @@
   .subject-header.active + .topic-list { display: block; }
   .topic-item { padding: 12px 20px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; border-bottom: 1px solid #f1f2f5; color: #374151; }
   .topic-item:last-child { border-bottom: none; }
+
+  /* Error State inside details for Result Awaiting */
+  .error-state-card { background: white; border-radius: 12px; padding: 40px 20px; margin: 16px; text-align: center; border: 1px solid var(--border-color); }
+  .error-icon-box { width: 60px; height: 60px; background: #f4f0ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; }
+  .error-msg { font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 6px; }
 
   /* Toast Notification */
   .toast-container { position: fixed; bottom: 74px; width: 100%; max-width: 480px; padding: 0 16px; z-index: 90; display: flex; justify-content: center; }
@@ -186,6 +206,11 @@
   <!-- ================= VIEW 1: HOME DASHBOARD ================= -->
   <div id="dashboardView" class="view-section active">
     
+    <div class="app-header">
+      <div class="batch-dropdown">Vidyapeeth 12-LN... <span>▼</span></div>
+      <div class="user-profile"><div class="user-avatar">A</div> Amit</div>
+    </div>
+
     <!-- Top Alert Banner -->
     <div class="info-banner">
       <div class="info-content">
@@ -198,7 +223,6 @@
     <!-- Attendance Card -->
     <div class="card">
       <div class="section-title">📅 Attendance</div>
-      
       <div class="donut-wrapper">
         <div class="donut">
           <div class="donut-inner">
@@ -207,17 +231,10 @@
           </div>
         </div>
       </div>
-      
       <div class="stats-row">
-        <div class="stat-item">
-          <div class="stat-val">129</div>
-          <div class="stat-label">Total Study Days</div>
-        </div>
+        <div class="stat-item"><div class="stat-val">129</div><div class="stat-label">Total Study Days</div></div>
         <div class="divider-v"></div>
-        <div class="stat-item">
-          <div class="stat-val">102</div>
-          <div class="stat-label">Total Present Days</div>
-        </div>
+        <div class="stat-item"><div class="stat-val">102</div><div class="stat-label">Total Present Days</div></div>
       </div>
       
       <div class="weekly-header">
@@ -246,7 +263,6 @@
     <!-- Daily Practice Paper Card -->
     <div class="card">
       <div class="section-title">📋 Daily Practice Paper</div>
-      
       <div class="inner-panel">
         <div class="panel-header">
           <div class="panel-title">Total DPP's Attempted</div>
@@ -255,15 +271,9 @@
         <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 2%;"></div></div>
         <div class="panel-subtitle">In Attempted DPP's</div>
         <div class="panel-stats">
-          <div>
-            <div class="panel-stat-val">100.0%</div>
-            <div class="panel-stat-label">Questions Attempted</div>
-          </div>
+          <div><div class="panel-stat-val">100.0%</div><div class="panel-stat-label">Questions Attempted</div></div>
           <div class="divider-v" style="background: #e5e7eb;"></div>
-          <div>
-            <div class="panel-stat-val">71.43%</div>
-            <div class="panel-stat-label">Accuracy</div>
-          </div>
+          <div><div class="panel-stat-val">71.43%</div><div class="panel-stat-label">Accuracy</div></div>
         </div>
       </div>
 
@@ -280,7 +290,6 @@
           <div class="chart-legend-item"><div class="chart-legend-box" style="background:var(--primary-color)"></div> Attempted DPPs</div>
         </div>
       </div>
-
       <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
     </div>
 
@@ -290,14 +299,14 @@
       <div class="inner-panel test-inner-panel">
         <div class="panel-header">
           <div class="panel-title">Total Tests Attempted</div>
-          <div><span class="panel-val">1</span><span class="panel-val-total">/11</span></div>
+          <div><span class="panel-val">0</span><span class="panel-val-total">/11</span></div>
         </div>
-        <div class="progress-bar-bg test-progress-bg"><div class="progress-bar-fill" style="width: 9%;"></div></div>
+        <div class="progress-bar-bg test-progress-bg"><div class="progress-bar-fill" style="width: 0%;"></div></div>
         <div class="panel-subtitle">In Attempted Tests</div>
         <div class="panel-stats">
-          <div><div class="panel-stat-val">32%</div><div class="panel-stat-label">Avg. Score</div></div>
+          <div><div class="panel-stat-val">0%</div><div class="panel-stat-label">Avg. Score</div></div>
           <div class="divider-v test-progress-bg"></div>
-          <div><div class="panel-stat-val">88%</div><div class="panel-stat-label">Accuracy</div></div>
+          <div><div class="panel-stat-val">0%</div><div class="panel-stat-label">Accuracy</div></div>
         </div>
       </div>
       <button class="btn-details">Subject Details <span class="arrow-right">▶</span></button>
@@ -307,27 +316,16 @@
 
     <!-- Timeline Tests List -->
     <div class="timeline">
-      <!-- AITS - 2 (Clickable to open inner details page) -->
+      <!-- AITS - 2 (Result Awaiting) -->
       <div class="test-card-wrap">
         <div class="timeline-dot"></div>
-        <div class="test-card">
+        <div class="test-card" onclick="openTestDetails('aits2')" style="cursor: pointer;">
           <div class="test-header">
             <div class="test-title">AITS - 2</div>
-            <div class="badge badge-attempted">ATTEMPTED</div>
+            <div class="badge badge-awaiting">RESULT_AWAITING</div>
           </div>
           <div class="test-meta">20-9-2026 &bull; Offline</div>
-          
-          <div class="test-stats-box">
-            <div class="ts-col">
-              <div class="ts-label">Score</div>
-              <div><span class="ts-val">234/720</span> <span class="ts-sub">32%</span></div>
-            </div>
-            <div class="ts-col">
-              <div class="ts-label">Rank</div>
-              <div class="ts-val">892</div>
-            </div>
-          </div>
-          <div class="test-view-link" onclick="openTestDetails()">View Details <span class="arrow-right">▶</span></div>
+          <div style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">Result has not been announced yet</div>
         </div>
       </div>
 
@@ -344,7 +342,7 @@
             <div class="ts-col"><div class="ts-label">Score</div><div><span class="ts-val">148/720</span> <span class="ts-sub">21%</span></div></div>
             <div class="ts-col"><div class="ts-label">Rank</div><div class="ts-val">1125</div></div>
           </div>
-          <div class="test-view-link" onclick="openTestDetails()">View Details <span class="arrow-right">▶</span></div>
+          <div class="test-view-link" onclick="openTestDetails('milestone7')">View Details <span class="arrow-right">▶</span></div>
         </div>
       </div>
 
@@ -359,101 +357,99 @@
           <div class="test-meta">6-9-2026 &bull; Offline</div>
         </div>
       </div>
+
+      <!-- Milestone:6 -->
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header">
+            <div class="test-title">Milestone:6</div>
+            <div class="badge badge-attempted">ATTEMPTED</div>
+          </div>
+          <div class="test-meta">23-8-2026 &bull; Offline</div>
+          <div class="test-stats-box">
+            <div class="ts-col"><div class="ts-label">Score</div><div><span class="ts-val">51/720</span> <span class="ts-sub">7%</span></div></div>
+            <div class="ts-col"><div class="ts-label">Rank</div><div class="ts-val">1537</div></div>
+          </div>
+          <div class="test-view-link" onclick="openTestDetails('milestone6')">View Details <span class="arrow-right">▶</span></div>
+        </div>
+      </div>
     </div>
+
+    <div class="view-all-btn" onclick="openAllTests()">View All Tests ➔</div>
 
     <!-- Toast Notice -->
     <div class="toast-container">
       <div class="toast">
         <div style="display:flex; align-items:center; gap:8px;">📄 <span>Class Status will get updated by tomorrow!</span></div>
-        <div class="toast-close">✕</div>
+        <div class="toast-close" onclick="this.parentElement.parentElement.style.display='none'">✕</div>
       </div>
     </div>
 
   </div> <!-- End Dashboard View -->
 
 
-  <!-- ================= VIEW 2: TEST DETAILS (INNER PAGE) ================= -->
+  <!-- ================= VIEW 2: ALL TESTS PAGE ================= -->
+  <div id="allTestsView" class="view-section">
+    <div class="top-nav-bar" onclick="closeAllTests()">
+      <span class="back-arrow">‹</span> All Tests
+    </div>
+    <div class="tabs-row">
+      <div class="tab-item active">Objective</div>
+      <div class="tab-item" style="color:var(--text-secondary)">Subjective</div>
+    </div>
+    <div class="results-info-text">*Results are shown on the basis of First Attempt.</div>
+
+    <!-- Timeline in All Tests -->
+    <div class="timeline" style="margin-top: 10px;">
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card" onclick="openTestDetails('aits2')">
+          <div class="test-header"><div class="test-title">AITS - 2</div><div class="badge badge-awaiting">RESULT_AWAITING</div></div>
+          <div class="test-meta">20-9-2026 &bull; Offline</div>
+          <div style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">Result has not been announced yet</div>
+        </div>
+      </div>
+
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header"><div class="test-title">Milestone:7</div><div class="badge badge-attempted">ATTEMPTED</div></div>
+          <div class="test-meta">13-9-2026 &bull; Offline</div>
+          <div class="test-stats-box">
+            <div class="ts-col"><div class="ts-label">Score</div><div><span class="ts-val">148/720</span> <span class="ts-sub">21%</span></div></div>
+            <div class="ts-col"><div class="ts-label">Rank</div><div class="ts-val">1125</div></div>
+          </div>
+          <div class="test-view-link" onclick="openTestDetails('milestone7')">View Details <span class="arrow-right">▶</span></div>
+        </div>
+      </div>
+
+      <div class="test-card-wrap">
+        <div class="timeline-dot"></div>
+        <div class="test-card">
+          <div class="test-header"><div class="test-title">Milestone:4</div><div class="badge badge-attempted">ATTEMPTED</div></div>
+          <div class="test-meta">12-7-2026 &bull; Offline</div>
+          <div class="test-stats-box">
+            <div class="ts-col"><div class="ts-label">Score</div><div><span class="ts-val">110/720</span> <span class="ts-sub">15%</span></div></div>
+            <div class="ts-col"><div class="ts-label">Rank</div><div class="ts-val">1622</div></div>
+          </div>
+          <div class="test-view-link" onclick="openTestDetails('milestone4')">View Details <span class="arrow-right">▶</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= VIEW 3: TEST DETAILS (INNER PAGE) ================= -->
   <div id="testDetailsView" class="view-section">
     
-    <div class="top-nav-bar" onclick="closeTestDetails()">
-      <span class="back-arrow">‹</span> AITS - 2
+    <div class="top-nav-bar" id="detailNavTitle" onclick="closeTestDetails()">
+      <span class="back-arrow">‹</span> Test Details
     </div>
 
-    <div class="details-summary-card">
-      <div class="metrics-grid">
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#e0f2fe; color:#0284c7;">📈</div>
-          <div class="metric-info"><div class="m-label">Score</div><div class="m-val">234 / 720</div></div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#dcfce7; color:#16a34a;">🎯</div>
-          <div class="metric-info"><div class="m-label">Accuracy</div><div class="m-val">88.5%</div></div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#fef3c7; color:#d97706;">✅</div>
-          <div class="metric-info"><div class="m-label">Correct</div><div class="m-val">62</div></div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#f3e8ff; color:#7e22ce;">🏆</div>
-          <div class="metric-info"><div class="m-label">Rank</div><div class="m-val">892</div></div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#ffedd5; color:#c2410c;">⭐</div>
-          <div class="metric-info"><div class="m-label">Top Score</div><div class="m-val">685/720</div></div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-icon" style="background:#f1f5f9; color:#475569;">📊</div>
-          <div class="metric-info"><div class="m-label">Avg Score</div><div class="m-val">317.24</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sub-performance-title">Subject wise Performance</div>
-
-    <!-- Accordion Subject: Physics -->
-    <div class="subject-card">
-      <div class="subject-header" onclick="toggleAccordion(this)">
-        <span>Physics</span> <span>7 <span class="sub-arrow">▼</span></span>
-      </div>
-      <div class="topic-list">
-        <div class="topic-item"><span>Electric Charges and Fields</span> <span>2</span></div>
-        <div class="topic-item"><span>Electrostatic Potential and Capacitance</span> <span>3</span></div>
-        <div class="topic-item"><span>Current Electricity</span> <span>2</span></div>
-      </div>
-    </div>
-
-    <!-- Accordion Subject: Chemistry -->
-    <div class="subject-card">
-      <div class="subject-header" onclick="toggleAccordion(this)">
-        <span>Chemistry</span> <span>8 <span class="sub-arrow">▼</span></span>
-      </div>
-      <div class="topic-list">
-        <div class="topic-item"><span>Organic Chemistry: Some Basic Principles...</span> <span>4</span></div>
-        <div class="topic-item"><span>Haloalkanes and Haloarenes</span> <span>3</span></div>
-        <div class="topic-item"><span>Solutions</span> <span>1</span></div>
-      </div>
-    </div>
-
-    <!-- Accordion Subject: Botany -->
-    <div class="subject-card">
-      <div class="subject-header" onclick="toggleAccordion(this)">
-        <span>Botany</span> <span>35 <span class="sub-arrow">▼</span></span>
-      </div>
-      <div class="topic-list">
-        <div class="topic-item"><span>Sexual Reproduction in Flowering Plants</span> <span>27</span></div>
-        <div class="topic-item"><span>Molecular Basis of Inheritance</span> <span>8</span></div>
-      </div>
-    </div>
-
-    <!-- Accordion Subject: Zoology -->
-    <div class="subject-card">
-      <div class="subject-header" onclick="toggleAccordion(this)">
-        <span>Zoology</span> <span>60 <span class="sub-arrow">▼</span></span>
-      </div>
-      <div class="topic-list">
-        <div class="topic-item"><span>Human Reproduction</span> <span>30</span></div>
-        <div class="topic-item"><span>Reproductive Health</span> <span>30</span></div>
-      </div>
+    <!-- Dynamic Content Container depending on test type -->
+    <div id="testDetailContent">
+      <!-- Injected via JavaScript -->
     </div>
 
   </div> <!-- End Test Details View -->
@@ -461,7 +457,7 @@
 
   <!-- Bottom Navigation Bar -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="closeTestDetails()">
+    <div class="nav-item active" onclick="closeAllTests(); closeTestDetails();">
       <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-4h2v4z"/></svg></div>
       Dashboard
     </div>
@@ -479,14 +475,130 @@
 
 <script>
   // Navigation Toggles
-  function openTestDetails() {
+  function openTestDetails(testId) {
     document.getElementById('dashboardView').classList.remove('active');
+    document.getElementById('allTestsView').classList.remove('active');
     document.getElementById('testDetailsView').classList.add('active');
+    
+    const container = document.getElementById('testDetailContent');
+    const navTitle = document.getElementById('detailNavTitle');
+
+    if(testId === 'aits2') {
+      navTitle.innerHTML = `<span class="back-arrow">‹</span> AITS - 2`;
+      container.innerHTML = `
+        <div class="error-state-card">
+          <div class="error-icon-box">📄</div>
+          <div class="error-msg">Sorry!, Subject wise data is not available yet.</div>
+        </div>
+      `;
+    } else if(testId === 'milestone7' || testId === 'milestone4' || testId === 'milestone6') {
+      let testName = testId === 'milestone7' ? 'Milestone:7' : (testId === 'milestone4' ? 'Milestone:4' : 'Milestone:6');
+      let score = testId === 'milestone7' ? '148 / 720' : (testId === 'milestone4' ? '110 / 720' : '51 / 720');
+      let acc = testId === 'milestone7' ? '91.57%' : (testId === 'milestone4' ? '95.69%' : '85.20%');
+      let correct = testId === 'milestone7' ? '57' : (testId === 'milestone4' ? '38' : '22');
+      let rank = testId === 'milestone7' ? '1125' : (testId === 'milestone4' ? '1622' : '1537');
+      let topScore = '637 / 720';
+      let avgScore = '279.96';
+
+      navTitle.innerHTML = `<span class="back-arrow">‹</span> ${testName}`;
+      container.innerHTML = `
+        <div class="details-summary-card">
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#e0f2fe; color:#0284c7;">📈</div>
+              <div class="metric-info"><div class="m-label">Score</div><div class="m-val">${score}</div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#dcfce7; color:#16a34a;">🎯</div>
+              <div class="metric-info"><div class="m-label">Accuracy</div><div class="m-val">${acc}</div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#fef3c7; color:#d97706;">✅</div>
+              <div class="metric-info"><div class="m-label">Correct</div><div class="m-val">${correct}</div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#f3e8ff; color:#7e22ce;">🏆</div>
+              <div class="metric-info"><div class="m-label">Rank</div><div class="m-val">${rank}</div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#ffedd5; color:#c2410c;">⭐</div>
+              <div class="metric-info"><div class="m-label">Top Score</div><div class="m-val">${topScore}</div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-icon" style="background:#f1f5f9; color:#475569;">📊</div>
+              <div class="metric-info"><div class="m-label">Avg Score</div><div class="m-val">${avgScore}</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-performance-title">Subject wise Performance</div>
+
+        <!-- Subject: Physics -->
+        <div class="subject-card">
+          <div class="subject-header" onclick="toggleAccordion(this)">
+            <span>Physics</span> <span>2 <span class="sub-arrow">▼</span></span>
+          </div>
+          <div class="topic-list">
+            <div class="topic-item"><span>Electromagnetic Waves</span> <span>-2</span></div>
+            <div class="topic-item"><span>Ray Optics and Optical Instruments</span> <span>4</span></div>
+          </div>
+        </div>
+
+        <!-- Subject: Chemistry -->
+        <div class="subject-card">
+          <div class="subject-header" onclick="toggleAccordion(this)">
+            <span>Chemistry</span> <span>18 <span class="sub-arrow">▼</span></span>
+          </div>
+          <div class="topic-list">
+            <div class="topic-item"><span>Amines</span> <span>15</span></div>
+            <div class="topic-item"><span>Aldehydes, Ketones and Carboxylic Acids</span> <span>3</span></div>
+          </div>
+        </div>
+
+        <!-- Subject: Botany -->
+        <div class="subject-card">
+          <div class="subject-header" onclick="toggleAccordion(this)">
+            <span>Botany</span> <span>54 <span class="sub-arrow">▼</span></span>
+          </div>
+          <div class="topic-list">
+            <div class="topic-item"><span>Microbes in Human Welfare</span> <span>54</span></div>
+          </div>
+        </div>
+
+        <!-- Subject: Zoology -->
+        <div class="subject-card">
+          <div class="subject-header" onclick="toggleAccordion(this)">
+            <span>Zoology</span> <span>74 <span class="sub-arrow">▼</span></span>
+          </div>
+          <div class="topic-list">
+            <div class="topic-item"><span>Human Reproduction</span> <span>40</span></div>
+            <div class="topic-item"><span>Reproductive Health</span> <span>34</span></div>
+          </div>
+        </div>
+      `;
+    }
     window.scrollTo(0, 0);
   }
 
   function closeTestDetails() {
     document.getElementById('testDetailsView').classList.remove('active');
+    // Check which view was active before
+    if(document.getElementById('allTestsView').style.display === 'block') {
+      document.getElementById('allTestsView').classList.add('active');
+    } else {
+      document.getElementById('dashboardView').classList.add('active');
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function openAllTests() {
+    document.getElementById('dashboardView').classList.remove('active');
+    document.getElementById('allTestsView').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function closeAllTests() {
+    document.getElementById('allTestsView').classList.remove('active');
     document.getElementById('dashboardView').classList.add('active');
     window.scrollTo(0, 0);
   }
